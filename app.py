@@ -221,7 +221,6 @@ def init_db():
             admin.set_password('admin123')
             db.session.add(admin)
             
-            # Добавляем вашего пользователя
             angelina = User(login='angelkuz')
             angelina.set_password('02042004')
             db.session.add(angelina)
@@ -254,7 +253,7 @@ def init_db():
             db.session.add_all(employees)
             db.session.commit()
             print("✅ Создано 100 тестовых сотрудников")
-            
+
 if __name__ == '__main__':
     init_db()
     app.run(debug=True)

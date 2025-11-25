@@ -18,13 +18,11 @@ body {
     flex-direction: column;
 }
 
-/* Убираем ограничение по ширине и делаем на весь экран */
 .container {
     width: 100%;
     padding: 0 20px;
 }
 
-/* Header - переделываем полностью */
 header {
     background: linear-gradient(135deg, #a8d8ea 0%, #8cc4d8 100%);
     padding: 1rem 0;
