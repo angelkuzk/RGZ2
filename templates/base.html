@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отдел кадров | {% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+    
+    <!-- Фавиконки -->
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}?v=2" type="image/x-icon">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}?v=2" type="image/x-icon">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-left">
+                <h1>Отдел кадров</h1>
+                <div class="student-info">
+                    Кузнецова Ангелина Андреевна | ФБИ-33
+                </div>
+            </div>
+            <nav>
+                <a href="{{ url_for('index') }}">Главная</a>
+                <a href="{{ url_for('employees') }}">Сотрудники</a>
+                {% if session.user_id %}
+                    <a href="{{ url_for('add_employee') }}">Добавить сотрудника</a>
+                    <span>Вы вошли как {{ session.user_login }}</span>
+                    <a href="{{ url_for('logout') }}">Выйти</a>
+                    <form action="{{ url_for('delete_account') }}" method="POST">
+                        <button type="submit" onclick="return confirm('Удалить аккаунт?')">Удалить аккаунт</button>
+                    </form>
+                {% else %}
+                    <a href="{{ url_for('login') }}">Вход для кадровиков</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <!-- Сообщения flash -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    <div class="flash-messages">
+                        {% for category, message in messages %}
+                            <div class="flash {{ category }}">{{ message }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endwith %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Кузнецова Ангелина Андреевна. Все права защищены.</p>
+        </div>
+    </footer>
+</body>
+</html>

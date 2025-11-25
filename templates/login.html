@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Вход в систему{% endblock %}
+
+{% block content %}
+<div class="login-form">
+    <h2>Вход для кадровиков</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label for="login">Логин:</label>
+            <input type="text" id="login" name="login" required 
+                   placeholder="Введите ваш логин">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required
+                   placeholder="Введите ваш пароль">
+        </div>
+        
+        <button type="submit" class="btn" style="width: 100%;">Войти в систему</button>
+    </form>
+    
+    <div style="margin-top: 2rem; padding: 1.5rem; background: #fff9e6; border-radius: 8px; border-left: 4px solid #ffd6a5;">
+        <h4 style="color: #8a6d3b; margin-bottom: 0.5rem;">Тестовые аккаунты:</h4>
+        <p style="margin: 0; color: #8a6d3b;">
+            <strong>Админ:</strong><br>
+            Логин: admin<br>
+            Пароль: admin123
+        </p>
+        <p style="margin: 1rem 0 0 0; color: #8a6d3b;">
+            <strong>Ангелина:</strong><br>
+            Логин: angelkuz<br>
+            Пароль: 02042004
+        </p>
+    </div>
+</div>
+{% endblock %}

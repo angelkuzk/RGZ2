@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}{{ 'Редактирование' if employee else 'Добавление' }} сотрудника{% endblock %}
+
+{% block content %}
+<div class="edit-form">
+    <h2>{{ 'Редактирование' if employee else 'Добавление' }} сотрудника</h2>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="full_name">ФИО:</label>
+            <input type="text" id="full_name" name="full_name" 
+                   value="{{ employee.full_name if employee else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="position">Должность:</label>
+            <input type="text" id="position" name="position" 
+                   value="{{ employee.position if employee else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="gender">Пол:</label>
+            <select id="gender" name="gender" required>
+                <option value="">Выберите пол</option>
+                <option value="male" {{ 'selected' if employee and employee.gender == 'male' }}>Мужской</option>
+                <option value="female" {{ 'selected' if employee and employee.gender == 'female' }}>Женский</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label for="phone">Телефон:</label>
+            <input type="tel" id="phone" name="phone" 
+                   value="{{ employee.phone if employee else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" 
+                   value="{{ employee.email if employee else '' }}" required>
+        </div>
+        
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="on_probation" 
+                       {{ 'checked' if employee and employee.on_probation }}>
+                На испытательном сроке
+            </label>
+        </div>
+        
+        <div class="form-group">
+            <label for="hire_date">Дата устройства на работу:</label>
+            <input type="date" id="hire_date" name="hire_date" 
+                   value="{{ employee.hire_date.strftime('%Y-%m-%d') if employee else '' }}" required>
+        </div>
+        
+        <button type="submit" class="btn">{{ 'Сохранить' if employee else 'Добавить' }}</button>
+        <a href="{{ url_for('employees') }}" class="btn btn-cancel">Отмена</a>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}Главная страница{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h2>Добро пожаловать в систему отдела кадров</h2>
+    <p>Эффективное управление персоналом и кадровыми данными</p>
+    <a href="{{ url_for('employees') }}" class="btn">Посмотреть список сотрудников</a>
+    
+    {% if not session.user_id %}
+    <div style="margin-top: 2rem; padding: 1.5rem; background: #e8f4fd; border-radius: 10px; border-left: 4px solid #3498db;">
+        <p style="margin: 0; color: #2c3e50;">Для управления данными сотрудников требуется <a href="{{ url_for('login') }}" style="color: #3498db; font-weight: 600;">авторизация</a></p>
+    </div>
+    {% else %}
+    <div style="margin-top: 2rem; padding: 1.5rem; background: #e8f6e8; border-radius: 10px; border-left: 4px solid #27ae60;">
+        <p style="margin: 0; color: #2c3e50;">Вы авторизованы как кадровик. Доступны все функции управления.</p>
+    </div>
+    {% endif %}
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 3rem;">
+    <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;">
+        <h3 style="color: #3498db; margin-bottom: 1rem;">👥 Сотрудники</h3>
+        <p>Просмотр полного списка сотрудников компании с возможностью поиска и сортировки</p>
+    </div>
+    
+    <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;">
+        <h3 style="color: #3498db; margin-bottom: 1rem;">🔍 Поиск</h3>
+        <p>Быстрый поиск сотрудников по любым данным: ФИО, должность, телефон или email</p>
+    </div>
+    
+    <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;">
+        <h3 style="color: #3498db; margin-bottom: 1rem;">📊 Управление</h3>
+        <p>Для кадровиков: добавление, редактирование и удаление записей сотрудников</p>
+    </div>
+</div>
+{% endblock %}

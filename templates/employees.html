@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Список сотрудников{% endblock %}
+
+{% block content %}
+<div class="employees-header">
+    <h2 style="color: #2c3e50; margin-bottom: 1.5rem;">Список сотрудников</h2>
+    
+    <!-- Фильтры и поиск -->
+    <div class="filters-container">
+        <!-- Поиск -->
+        <form method="GET" class="search-form">
+            <input type="text" name="search" value="{{ search }}" placeholder="Поиск по ФИО, должности, телефону или email...">
+            <button type="submit" class="btn">Найти</button>
+            {% if search %}
+                <a href="{{ url_for('employees') }}" class="btn btn-cancel">Сбросить поиск</a>
+            {% endif %}
+        </form>
+
+        <!-- Фильтр сортировки -->
+        <form method="GET" class="sort-filter-form">
+            <input type="hidden" name="search" value="{{ search }}">
+            
+            <div class="filter-group">
+                <label for="sort_field">Сортировать по:</label>
+                <select name="sort" id="sort_field" onchange="this.form.submit()">
+                    <option value="">-- Выберите поле --</option>
+                    <option value="full_name" {% if sort_field == 'full_name' %}selected{% endif %}>ФИО</option>
+                    <option value="position" {% if sort_field == 'position' %}selected{% endif %}>Должность</option>
+                    <option value="gender" {% if sort_field == 'gender' %}selected{% endif %}>Пол</option>
+                    <option value="phone" {% if sort_field == 'phone' %}selected{% endif %}>Телефон</option>
+                    <option value="email" {% if sort_field == 'email' %}selected{% endif %}>Email</option>
+                    <option value="hire_date" {% if sort_field == 'hire_date' %}selected{% endif %}>Дата устройства</option>
+                    <option value="on_probation" {% if sort_field == 'on_probation' %}selected{% endif %}>Испытательный срок</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="sort_order">Направление:</label>
+                <select name="order" id="sort_order" onchange="this.form.submit()">
+                    <option value="asc" {% if sort_order == 'asc' %}selected{% endif %}>По возрастанию (А-Я)</option>
+                    <option value="desc" {% if sort_order == 'desc' %}selected{% endif %}>По убыванию (Я-А)</option>
+                </select>
+            </div>
+
+            {% if sort_field %}
+                <a href="{{ url_for('employees', search=search) }}" class="btn btn-cancel">Сбросить сортировку</a>
+            {% endif %}
+        </form>
+    </div>
+</div>
+
+{% if is_authenticated %}
+<div style="margin-bottom: 1.5rem;">
+    <a href="{{ url_for('add_employee') }}" class="btn">➕ Добавить нового сотрудника</a>
+</div>
+{% endif %}
+
+<!-- Информация о текущей сортировке -->
+{% if sort_field %}
+<div class="sort-info">
+    📊 Сортировка: 
+    <strong>
+        {% if sort_field == 'full_name' %}ФИО
+        {% elif sort_field == 'position' %}Должность
+        {% elif sort_field == 'gender' %}Пол
+        {% elif sort_field == 'phone' %}Телефон
+        {% elif sort_field == 'email' %}Email
+        {% elif sort_field == 'hire_date' %}Дата устройства
+        {% elif sort_field == 'on_probation' %}Испытательный срок
+        {% endif %}
+    </strong>
+    • 
+    <strong>
+        {% if sort_order == 'asc' %}По возрастанию
+        {% else %}По убыванию
+        {% endif %}
+    </strong>
+</div>
+{% endif %}
+
+<!-- Таблица сотрудников -->
+<div style="overflow-x: auto;">
+    <table class="employees-table">
+        <thead>
+            <tr>
+                <th>
+                    <a href="?{% if search %}search={{ search }}&{% endif %}sort=full_name&order={{ 'desc' if sort_field == 'full_name' and sort_order == 'asc' else 'asc' }}">
+                        ФИО {% if sort_field == 'full_name' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
+                    </a>
+                </th>
+                <th>
+                    <a href="?{% if search %}search={{ search }}&{% endif %}sort=position&order={{ 'desc' if sort_field == 'position' and sort_order == 'asc' else 'asc' }}">
+                        Должность {% if sort_field == 'position' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
+                    </a>
+                </th>
+                <th>
+                    <a href="?{% if search %}search={{ search }}&{% endif %}sort=gender&order={{ 'desc' if sort_field == 'gender' and sort_order == 'asc' else 'asc' }}">
+                        Пол {% if sort_field == 'gender' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
+                    </a>
+                </th>
+                <th>
+                    <a href="?{% if search %}search={{ search }}&{% endif %}sort=phone&order={{ 'desc' if sort_field == 'phone' and sort_order == 'asc' else 'asc' }}">
+                        Телефон {% if sort_field == 'phone' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
+                    </a>
+                </th>
+                <th>
+                    <a href="?{% if search %}search={{ search }}&{% endif %}sort=email&order={{ 'desc' if sort_field == 'email' and sort_order == 'asc' else 'asc' }}">
+                        Email {% if sort_field == 'email' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
+                    </a>
+                </th>
+                <th>
+                    <a href="?{% if search %}search={{ search }}&{% endif %}sort=on_probation&order={{ 'desc' if sort_field == 'on_probation' and sort_order == 'asc' else 'asc' }}">
+                        Испытательный срок {% if sort_field == 'on_probation' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
+                    </a>
+                </th>
+                <th>
+                    <a href="?{% if search %}search={{ search }}&{% endif %}sort=hire_date&order={{ 'desc' if sort_field == 'hire_date' and sort_order == 'asc' else 'asc' }}">
+                        Дата устройства {% if sort_field == 'hire_date' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
+                    </a>
+                </th>
+                {% if is_authenticated %}
+                <th style="text-align: center;">Действия</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees.items %}
+            <tr>
+                <td><strong>{{ employee.full_name }}</strong></td>
+                <td>{{ employee.position }}</td>
+                <td>{{ 'Мужской' if employee.gender == 'male' else 'Женский' }}</td>
+                <td>{{ employee.phone }}</td>
+                <td>{{ employee.email }}</td>
+                <td>
+                    <span style="padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.85rem; font-weight: 500; background: {{ '#e8f6e8' if not employee.on_probation else '#fff3cd' }}; color: {{ '#27ae60' if not employee.on_probation else '#856404' }};">
+                        {{ 'Да' if employee.on_probation else 'Нет' }}
+                    </span>
+                </td>
+                <td>{{ employee.hire_date.strftime('%d.%m.%Y') }}</td>
+                {% if is_authenticated %}
+                <td class="actions">
+                    <a href="{{ url_for('edit_employee', employee_id=employee.id) }}" class="btn btn-edit">✏️ Редактировать</a>
+                    <a href="{{ url_for('delete_employee', employee_id=employee.id) }}" 
+                       class="btn btn-delete" 
+                       onclick="return confirm('Вы уверены, что хотите удалить сотрудника {{ employee.full_name }}?')">🗑️ Удалить</a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<!-- Пагинация -->
+<div class="pagination">
+    {% if employees.has_prev %}
+        <a href="?page={{ employees.prev_num }}&{% if search %}search={{ search }}&{% endif %}{% if sort_field %}sort={{ sort_field }}&order={{ sort_order }}&{% endif %}" class="btn">⬅️ Назад</a>
+    {% endif %}
+    
+    <span style="color: #6c757d; font-weight: 500;">Страница {{ employees.page }} из {{ employees.pages }}</span>
+    
+    {% if employees.has_next %}
+        <a href="?page={{ employees.next_num }}&{% if search %}search={{ search }}&{% endif %}{% if sort_field %}sort={{ sort_field }}&order={{ sort_order }}&{% endif %}" class="btn">Показать ещё ➡️</a>
+    {% endif %}
+</div>
+
+<div class="employees-count">
+    Показано: {{ employees.items|length }} из {{ employees.total }} сотрудников
+</div>
+{% endblock %}
