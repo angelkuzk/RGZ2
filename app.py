@@ -5,16 +5,31 @@ import os
 import re
 from dotenv import load_dotenv
 
-load_dotenv()
+# Проверяем, работаем ли на PythonAnywhere
+is_pythonanywhere = 'PYTHONANYWHERE_DOMAIN' in os.environ
 
-app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-key')
+if is_pythonanywhere:
+    # Настройки для PythonAnywhere
+    app = Flask(__name__)
+    app.secret_key = os.environ.get('SECRET_KEY', 'pythonanywhere-secret-key')
+    
+    # Используем SQLite на PythonAnywhere
+    database_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance', 'hr_database.db')
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{database_path}'
+else:
+    # Локальные настройки
+    load_dotenv()
+    app = Flask(__name__)
+    app.secret_key = os.getenv('SECRET_KEY', 'dev-secret-key')
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 
-# Конфигурация PostgreSQL
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+if not os.path.exists('instance'):
+    os.makedirs('instance')
+
 db.init_app(app)
+
 
 # Валидация данных
 def validate_credentials(login, password):
