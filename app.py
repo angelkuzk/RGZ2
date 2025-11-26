@@ -3,6 +3,7 @@ from models import db, User, Employee
 from datetime import datetime
 import os
 import re
+from datetime import datetime
 from dotenv import load_dotenv
 
 # Проверяем, работаем ли на PythonAnywhere
@@ -47,23 +48,58 @@ def validate_credentials(login, password):
 def validate_employee_data(data):
     errors = []
     
-    if not data.get('full_name') or len(data['full_name'].strip()) < 2:
+    # Проверка ФИО
+    full_name = data.get('full_name', '').strip()
+    if not full_name or len(full_name) < 2:
         errors.append("ФИО должно содержать не менее 2 символов")
+    elif len(full_name) > 100:
+        errors.append("ФИО не должно превышать 100 символов")
+    elif not re.match(r'^[а-яА-ЯёЁ\s\-]+$', full_name):
+        errors.append("ФИО может содержать только русские буквы, пробелы и дефисы")
     
-    if not data.get('position'):
+    # Проверка должности
+    position = data.get('position', '').strip()
+    if not position:
         errors.append("Должность не может быть пустой")
+    elif len(position) > 100:
+        errors.append("Название должности не должно превышать 100 символов")
     
+    # Проверка пола
     if not data.get('gender') or data['gender'] not in ['male', 'female']:
         errors.append("Укажите пол")
     
-    if not data.get('phone') or not re.match(r'^[\d\s\-\+\(\)]+$', data['phone']):
-        errors.append("Некорректный формат телефона")
+    # Проверка телефона
+    phone = data.get('phone', '').strip()
+    if not phone:
+        errors.append("Телефон не может быть пустым")
+    elif not re.match(r'^[\d\s\-\+\(\)]{10,20}$', phone):
+        errors.append("Телефон должен содержать от 10 до 20 цифр и допустимых символов (+, -, (), пробелы)")
+    elif len(phone.replace(' ', '').replace('-', '').replace('+', '').replace('(', '').replace(')', '')) < 10:
+        errors.append("Телефон должен содержать не менее 10 цифр")
     
-    if not data.get('email') or not re.match(r'^[^@]+@[^@]+\.[^@]+$', data['email']):
+    # Проверка email
+    email = data.get('email', '').strip()
+    if not email:
+        errors.append("Email не может быть пустым")
+    elif not re.match(r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$', email):
         errors.append("Некорректный формат email")
+    elif len(email) > 100:
+        errors.append("Email не должен превышать 100 символов")
     
-    if not data.get('hire_date'):
+    # Проверка даты устройства
+    hire_date_str = data.get('hire_date', '')
+    if not hire_date_str:
         errors.append("Дата устройства на работу обязательна")
+    else:
+        try:
+            hire_date = datetime.strptime(hire_date_str, '%Y-%m-%d')
+            if hire_date > datetime.now():
+                errors.append("Дата устройства не может быть в будущем")
+            # Проверяем, что дата не слишком старая (например, не раньше 2000 года)
+            if hire_date.year < 2000:
+                errors.append("Дата устройства не может быть раньше 2000 года")
+        except ValueError:
+            errors.append("Некорректный формат даты")
     
     return errors
 
