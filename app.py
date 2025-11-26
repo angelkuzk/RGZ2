@@ -54,8 +54,8 @@ def validate_employee_data(data):
         errors.append("ФИО должно содержать не менее 2 символов")
     elif len(full_name) > 100:
         errors.append("ФИО не должно превышать 100 символов")
-    elif not re.match(r'^[а-яА-ЯёЁ\s\-]+$', full_name):
-        errors.append("ФИО может содержать только русские буквы, пробелы и дефисы")
+    elif not re.match(r'^[а-яА-ЯёЁ\s\-\.]+$', full_name):
+        errors.append("ФИО может содержать только русские буквы, пробелы, точки и дефисы")
     
     # Проверка должности
     position = data.get('position', '').strip()
@@ -74,7 +74,7 @@ def validate_employee_data(data):
         errors.append("Телефон не может быть пустым")
     elif not re.match(r'^[\d\s\-\+\(\)]{10,20}$', phone):
         errors.append("Телефон должен содержать от 10 до 20 цифр и допустимых символов (+, -, (), пробелы)")
-    elif len(phone.replace(' ', '').replace('-', '').replace('+', '').replace('(', '').replace(')', '')) < 10:
+    elif len(re.sub(r'[^\d]', '', phone)) < 10:
         errors.append("Телефон должен содержать не менее 10 цифр")
     
     # Проверка email
@@ -95,7 +95,6 @@ def validate_employee_data(data):
             hire_date = datetime.strptime(hire_date_str, '%Y-%m-%d')
             if hire_date > datetime.now():
                 errors.append("Дата устройства не может быть в будущем")
-            # Проверяем, что дата не слишком старая (например, не раньше 2000 года)
             if hire_date.year < 2000:
                 errors.append("Дата устройства не может быть раньше 2000 года")
         except ValueError:
