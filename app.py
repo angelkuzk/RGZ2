@@ -11,7 +11,7 @@ is_pythonanywhere = 'PYTHONANYWHERE_DOMAIN' in os.environ
 if is_pythonanywhere:
     # Настройки для PythonAnywhere
     app = Flask(__name__)
-    app.secret_key = os.environ.get('SECRET_KEY', 'pythonanywhere-secret-key')
+    app.secret_key = os.environ.get('SECRET_KEY', 'pythonanywhere-secret-key-2024')
     
     # Используем SQLite на PythonAnywhere
     database_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance', 'hr_database.db')
@@ -25,11 +25,11 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Создаем папку instance если ее нет
 if not os.path.exists('instance'):
     os.makedirs('instance')
 
 db.init_app(app)
-
 
 # Валидация данных
 def validate_credentials(login, password):
@@ -130,7 +130,7 @@ def get_employees_data():
         {'full_name': 'Тарасов Владимир Петрович', 'position': 'Системный администратор', 'gender': 'male', 'phone': '+7-495-100-10-37', 'email': 'tarasov@company.com', 'on_probation': False, 'hire_date': '2018-08-12'},
         {'full_name': 'Уварова Мария Сергеевна', 'position': 'Технический специалист', 'gender': 'female', 'phone': '+7-495-100-10-38', 'email': 'uvarova@company.com', 'on_probation': False, 'hire_date': '2020-10-05'},
         
-        # Дополнительные сотрудники для достижения 100 человек
+        # Дополнительные сотрудники
         {'full_name': 'Фомин Алексей Николаевич', 'position': 'Разработчик', 'gender': 'male', 'phone': '+7-495-100-10-39', 'email': 'fomin@company.com', 'on_probation': False, 'hire_date': '2021-06-20'},
         {'full_name': 'Хохлов Дмитрий Владимирович', 'position': 'Разработчик', 'gender': 'male', 'phone': '+7-495-100-10-40', 'email': 'khokhlov@company.com', 'on_probation': False, 'hire_date': '2021-08-14'},
         {'full_name': 'Царева Ольга Игоревна', 'position': 'Аналитик', 'gender': 'female', 'phone': '+7-495-100-10-41', 'email': 'tsareva@company.com', 'on_probation': False, 'hire_date': '2022-01-10'},
@@ -289,11 +289,13 @@ def employees():
     query = Employee.query
     
     if search:
+        # Поиск без учета регистра
+        search_pattern = f'%{search}%'
         search_filter = (
-            Employee.full_name.ilike(f'%{search}%') |
-            Employee.position.ilike(f'%{search}%') |
-            Employee.phone.ilike(f'%{search}%') |
-            Employee.email.ilike(f'%{search}%')
+            Employee.full_name.ilike(search_pattern) |
+            Employee.position.ilike(search_pattern) |
+            Employee.phone.ilike(search_pattern) |
+            Employee.email.ilike(search_pattern)
         )
         query = query.filter(search_filter)
     

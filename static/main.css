@@ -242,13 +242,15 @@ main .container {
     border-radius: 10px;
     overflow: hidden;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    table-layout: fixed;
 }
 
 .employees-table th,
 .employees-table td {
-    padding: 1rem 1.5rem;
+    padding: 1rem;
     text-align: left;
     border-bottom: 1px solid #f0f0f0;
+    word-wrap: break-word;
 }
 
 .employees-table th {
@@ -257,6 +259,51 @@ main .container {
     font-weight: 600;
     position: sticky;
     top: 0;
+}
+
+/* Ширины столбцов */
+.employees-table th:nth-child(1),
+.employees-table td:nth-child(1) {
+    width: 18%;
+}
+
+.employees-table th:nth-child(2),
+.employees-table td:nth-child(2) {
+    width: 15%;
+}
+
+.employees-table th:nth-child(3),
+.employees-table td:nth-child(3) {
+    width: 8%;
+    text-align: center;
+}
+
+.employees-table th:nth-child(4),
+.employees-table td:nth-child(4) {
+    width: 12%;
+    white-space: nowrap;
+}
+
+.employees-table th:nth-child(5),
+.employees-table td:nth-child(5) {
+    width: 18%;
+}
+
+.employees-table th:nth-child(6),
+.employees-table td:nth-child(6) {
+    width: 12%;
+    text-align: center;
+}
+
+.employees-table th:nth-child(7),
+.employees-table td:nth-child(7) {
+    width: 12%;
+}
+
+.employees-table th:nth-child(8),
+.employees-table td:nth-child(8) {
+    width: 15%;
+    text-align: center;
 }
 
 .employees-table th a {
@@ -280,12 +327,41 @@ main .container {
 
 .actions {
     white-space: nowrap;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
 }
 
 .actions .btn {
-    margin: 0.25rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
+    margin: 0;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+    flex: 1;
+    text-align: center;
+    min-width: auto;
+}
+
+/* Стили для статуса испытательного срока */
+.probation-badge {
+    padding: 0.4rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+    min-width: 60px;
+}
+
+.probation-yes {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeaa7;
+}
+
+.probation-no {
+    background: #e8f6e8;
+    color: #27ae60;
+    border: 1px solid #c8e6c9;
 }
 
 /* Search form */
@@ -447,89 +523,6 @@ footer p {
     font-weight: 500;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-    header .container {
-        flex-direction: column;
-        gap: 1rem;
-    }
-    
-    .header-left {
-        flex-direction: column;
-        gap: 1rem;
-        width: 100%;
-        text-align: center;
-    }
-    
-    header nav {
-        flex-direction: column;
-        gap: 0.5rem;
-        width: 100%;
-    }
-    
-    header nav a, header nav span {
-        display: block;
-        text-align: center;
-    }
-    
-    .search-form {
-        flex-direction: column;
-    }
-    
-    .search-form input {
-        min-width: auto;
-    }
-    
-    .sort-filter-form {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .filter-group select {
-        min-width: auto;
-        width: 100%;
-    }
-    
-    .employees-table {
-        font-size: 0.9rem;
-    }
-    
-    .employees-table th,
-    .employees-table td {
-        padding: 0.75rem 1rem;
-    }
-    
-    .actions .btn {
-        display: block;
-        margin: 0.25rem 0;
-    }
-    
-    .hero h2 {
-        font-size: 2rem;
-    }
-    
-    main .container {
-        padding: 1rem;
-        max-width: 100%;
-        border-radius: 0;
-    }
-}
-
-/* Анимация для загрузки страницы */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-main .container {
-    animation: fadeIn 0.6s ease-out;
-}
 /* Стили для ролей пользователей */
 .user-role {
     background: linear-gradient(135deg, #ffd6a5, #ffc885);
@@ -585,4 +578,117 @@ main .container {
     background: #fff9e6;
     border-left-color: #f39c12;
     color: #2c3e50;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header .container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .header-left {
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        text-align: center;
+    }
+    
+    header nav {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+    }
+    
+    header nav a, header nav span {
+        display: block;
+        text-align: center;
+    }
+    
+    .search-form {
+        flex-direction: column;
+    }
+    
+    .search-form input {
+        min-width: auto;
+    }
+    
+    .sort-filter-form {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-group select {
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .employees-table {
+        font-size: 0.9rem;
+    }
+    
+    .employees-table th,
+    .employees-table td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .employees-table th:nth-child(1),
+    .employees-table td:nth-child(1) {
+        width: 25%;
+    }
+    
+    .employees-table th:nth-child(2),
+    .employees-table td:nth-child(2) {
+        width: 20%;
+    }
+    
+    .employees-table th:nth-child(4),
+    .employees-table td:nth-child(4) {
+        width: 15%;
+        font-size: 0.75rem;
+    }
+    
+    .employees-table th:nth-child(5),
+    .employees-table td:nth-child(5) {
+        width: 20%;
+        font-size: 0.75rem;
+    }
+    
+    .actions {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .actions .btn {
+        display: block;
+        margin: 0.25rem 0;
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+    }
+    
+    .hero h2 {
+        font-size: 2rem;
+    }
+    
+    main .container {
+        padding: 1rem;
+        max-width: 100%;
+        border-radius: 0;
+    }
+}
+
+/* Анимация для загрузки страницы */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+main .container {
+    animation: fadeIn 0.6s ease-out;
 }

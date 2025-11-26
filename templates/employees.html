@@ -5,21 +5,23 @@
 {% block content %}
 <div class="employees-header">
     <h2 style="color: #2c3e50; margin-bottom: 1.5rem;">Список сотрудников</h2>
-{% if not is_authenticated %}
-<div class="access-info access-guest">
-    <p style="margin: 0; color: #2c3e50;">
-        <strong>🔒 Гостевой доступ</strong> - отображаются только ФИО и должности сотрудников. 
-        <a href="{{ url_for('login') }}" style="color: #3498db; font-weight: 600;">Войдите в систему</a> для просмотра полной информации.
-    </p>
-</div>
-{% elif not is_hr %}
-<div class="access-info access-user">
-    <p style="margin: 0; color: #2c3e50;">
-        <strong>👤 Права пользователя</strong> - доступен просмотр всех данных сотрудников. 
-        Для управления данными требуются права кадровика.
-    </p>
-</div>
-{% endif %}
+    
+    <!-- Информация о правах доступа -->
+    {% if not is_authenticated %}
+    <div class="access-info access-guest">
+        <p style="margin: 0; color: #2c3e50;">
+            <strong>🔒 Гостевой доступ</strong> - отображаются только ФИО и должности сотрудников. 
+            <a href="{{ url_for('login') }}" style="color: #3498db; font-weight: 600;">Войдите в систему</a> для просмотра полной информации.
+        </p>
+    </div>
+    {% elif not is_hr %}
+    <div class="access-info access-user">
+        <p style="margin: 0; color: #2c3e50;">
+            <strong>👤 Права пользователя</strong> - доступен просмотр всех данных сотрудников. 
+            Для управления данными требуются права кадровика.
+        </p>
+    </div>
+    {% endif %}
     
     <!-- Фильтры и поиск -->
     <div class="filters-container">
@@ -138,7 +140,7 @@
                     </a>
                 </th>
                 {% if is_hr %}
-                <th style="text-align: center;">Действия</th>
+                <th>Действия</th>
                 {% endif %}
                 {% endif %}
             </tr>
@@ -149,18 +151,18 @@
                 <td><strong>{{ employee.full_name }}</strong></td>
                 <td>{{ employee.position }}</td>
                 {% if is_authenticated %}
-                <td>{{ 'Мужской' if employee.gender == 'male' else 'Женский' }}</td>
-                <td>{{ employee.phone }}</td>
+                <td style="text-align: center;">{{ 'М' if employee.gender == 'male' else 'Ж' }}</td>
+                <td style="white-space: nowrap;">{{ employee.phone }}</td>
                 <td>{{ employee.email }}</td>
-                <td>
-                    <span style="padding: 0.25rem 0.75rem; border-radius: 15px; font-size: 0.85rem; font-weight: 500; background: {{ '#e8f6e8' if not employee.on_probation else '#fff3cd' }}; color: {{ '#27ae60' if not employee.on_probation else '#856404' }};">
+                <td style="text-align: center;">
+                    <span class="probation-badge {{ 'probation-yes' if employee.on_probation else 'probation-no' }}">
                         {{ 'Да' if employee.on_probation else 'Нет' }}
                     </span>
                 </td>
                 <td>{{ employee.hire_date.strftime('%d.%m.%Y') }}</td>
                 {% if is_hr %}
                 <td class="actions">
-                    <a href="{{ url_for('edit_employee', employee_id=employee.id) }}" class="btn btn-edit">✏️ Редактировать</a>
+                    <a href="{{ url_for('edit_employee', employee_id=employee.id) }}" class="btn btn-edit">✏️ Редакт.</a>
                     <a href="{{ url_for('delete_employee', employee_id=employee.id) }}" 
                        class="btn btn-delete" 
                        onclick="return confirm('Вы уверены, что хотите удалить сотрудника {{ employee.full_name }}?')">🗑️ Удалить</a>
