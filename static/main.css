@@ -261,10 +261,10 @@ main .container {
     top: 0;
 }
 
-/* Исправленные ширины столбцов */
+/* ИСПРАВЛЕННЫЕ ширины столбцов - кнопки теперь под заголовком */
 .employees-table th:nth-child(1),
 .employees-table td:nth-child(1) {
-    width: 16%;
+    width: 15%;
 }
 
 .employees-table th:nth-child(2),
@@ -286,7 +286,7 @@ main .container {
 
 .employees-table th:nth-child(5),
 .employees-table td:nth-child(5) {
-    width: 18%;
+    width: 16%;
 }
 
 .employees-table th:nth-child(6),
@@ -302,7 +302,7 @@ main .container {
 
 .employees-table th:nth-child(8),
 .employees-table td:nth-child(8) {
-    width: 14%;
+    width: 17%;
     text-align: center;
 }
 
@@ -634,6 +634,7 @@ footer p {
         padding: 0.75rem 0.5rem;
     }
     
+    /* ИСПРАВЛЕННЫЕ ширины для мобильной версии */
     .employees-table th:nth-child(1),
     .employees-table td:nth-child(1) {
         width: 20%;
@@ -668,15 +669,17 @@ footer p {
     }
     
     .actions {
-        flex-direction: column;
+        flex-direction: row;
         gap: 0.2rem;
+        justify-content: center;
     }
     
     .actions .btn {
         padding: 0.3rem 0.4rem;
         font-size: 0.7rem;
-        display: block;
-        width: 100%;
+        display: inline-block;
+        width: auto;
+        flex: none;
     }
     
     .hero h2 {
