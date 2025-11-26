@@ -3,19 +3,19 @@ import os
 
 path = '/home/angelkuzk2004/RGZ2'
 if path not in sys.path:
-    sys.path.append(path)
+    sys.path.insert(0, path)
 
 # Устанавливаем переменные окружения
-os.environ['SECRET_KEY'] = 'your-secret-key-for-pythonanywhere'
-os.environ['DATABASE_URL'] = 'sqlite:///' + os.path.join(path, 'instance', 'hr_database.db')
+os.environ['SECRET_KEY'] = 'pythonanywhere-secret-key-2024'
 
+# Импортируем приложение
 from app import app as application
 
-# Инициализация базы данных при первом запуске
+# Инициализация базы данных
 with application.app_context():
     from app import init_db
     try:
         init_db()
-        print("✅ База данных инициализирована")
+        print("✅ База данных инициализирована успешно")
     except Exception as e:
-        print(f"⚠️ База данных уже существует: {e}")
+        print(f"⚠️ Ошибка при инициализации базы данных: {e}")

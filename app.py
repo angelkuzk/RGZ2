@@ -3,7 +3,6 @@ from models import db, User, Employee
 from datetime import datetime
 import os
 import re
-from datetime import datetime
 from dotenv import load_dotenv
 
 # Проверяем, работаем ли на PythonAnywhere
@@ -14,9 +13,14 @@ if is_pythonanywhere:
     app = Flask(__name__)
     app.secret_key = os.environ.get('SECRET_KEY', 'pythonanywhere-secret-key-2024')
     
-    # Используем SQLite на PythonAnywhere
-    database_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'instance', 'hr_database.db')
+    # Используем SQLite на PythonAnywhere с абсолютным путем
+    home_dir = os.path.expanduser('~')
+    database_dir = os.path.join(home_dir, 'RGZ2', 'instance')
+    if not os.path.exists(database_dir):
+        os.makedirs(database_dir)
+    database_path = os.path.join(database_dir, 'hr_database.db')
     app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:///{database_path}'
+    print(f"✅ Используется база данных: {database_path}")
 else:
     # Локальные настройки
     load_dotenv()
@@ -26,10 +30,7 @@ else:
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Создаем папку instance если ее нет
-if not os.path.exists('instance'):
-    os.makedirs('instance')
-
+# Инициализируем базу данных
 db.init_app(app)
 
 # Валидация данных
@@ -297,24 +298,6 @@ def register():
             flash(f'Ошибка при регистрации: {str(e)}', 'error')
     
     return render_template('register.html')
-        
-        # Проверяем, нет ли уже пользователя с таким логином
-        existing_user = User.query.filter_by(login=login).first()
-        if existing_user:
-            flash('Пользователь с таким логином уже существует', 'error')
-            return render_template('register.html')
-        
-        try:
-            user = User(login=login, is_hr=is_hr)
-            user.set_password(password)
-            db.session.add(user)
-            db.session.commit()
-            flash('Пользователь успешно зарегистрирован как обычный пользователь', 'success')
-            return redirect(url_for('employees'))
-        except Exception as e:
-            flash(f'Ошибка при регистрации: {str(e)}', 'error')
-    
-    return render_template('register.html')
 
 @app.route('/logout')
 def logout():
@@ -490,55 +473,62 @@ def delete_employee(employee_id):
 
 def init_db():
     with app.app_context():
-        # Удаляем все таблицы и создаем заново
-        db.drop_all()
-        db.create_all()
-        
-        print("✅ База данных пересоздана")
-        
-        # Создаем тестовых пользователей (кадровиков)
-        admin = User(login='admin', is_hr=True)
-        admin.set_password('admin123')
-        db.session.add(admin)
-        
-        angelina = User(login='angelkuz', is_hr=True)
-        angelina.set_password('02042004')
-        db.session.add(angelina)
-        
-        # Добавляем обычных пользователей без прав кадровика
-        user1 = User(login='user1', is_hr=False)
-        user1.set_password('user123')
-        db.session.add(user1)
-        
-        test_user = User(login='test', is_hr=False)
-        test_user.set_password('test123')
-        db.session.add(test_user)
-        
-        db.session.commit()
-        print("✅ Созданы пользователи:")
-        print("   👑 Кадровики:")
-        print("      - login: admin, password: admin123")
-        print("      - login: angelkuz, password: 02042004")
-        print("   👤 Пользователи:")
-        print("      - login: user1, password: user123")
-        print("      - login: test, password: test123")
-        
-        # Создаем тестовых сотрудников из фиксированного списка
-        if Employee.query.count() == 0:
-            employees_data = get_employees_data()
-            for data in employees_data:
-                employee = Employee(
-                    full_name=data['full_name'],
-                    position=data['position'],
-                    gender=data['gender'],
-                    phone=data['phone'],
-                    email=data['email'],
-                    on_probation=data['on_probation'],
-                    hire_date=datetime.strptime(data['hire_date'], '%Y-%m-%d')
-                )
-                db.session.add(employee)
-            db.session.commit()
-            print(f"✅ Создано {len(employees_data)} тестовых сотрудников с нормальными ФИО")
+        try:
+            # Создаем все таблицы
+            db.create_all()
+            print("✅ Таблицы базы данных созданы")
+            
+            # Проверяем, есть ли уже пользователи
+            if User.query.count() == 0:
+                # Создаем тестовых пользователей (кадровиков)
+                admin = User(login='admin', is_hr=True)
+                admin.set_password('admin123')
+                db.session.add(admin)
+                
+                angelina = User(login='angelkuz', is_hr=True)
+                angelina.set_password('02042004')
+                db.session.add(angelina)
+                
+                # Добавляем обычных пользователей без прав кадровика
+                user1 = User(login='user1', is_hr=False)
+                user1.set_password('user123')
+                db.session.add(user1)
+                
+                test_user = User(login='test', is_hr=False)
+                test_user.set_password('test123')
+                db.session.add(test_user)
+                
+                db.session.commit()
+                print("✅ Созданы пользователи:")
+                print("   👑 Кадровики:")
+                print("      - login: admin, password: admin123")
+                print("      - login: angelkuz, password: 02042004")
+                print("   👤 Пользователи:")
+                print("      - login: user1, password: user123")
+                print("      - login: test, password: test123")
+            
+            # Создаем тестовых сотрудников из фиксированного списка
+            if Employee.query.count() == 0:
+                employees_data = get_employees_data()
+                for data in employees_data:
+                    employee = Employee(
+                        full_name=data['full_name'],
+                        position=data['position'],
+                        gender=data['gender'],
+                        phone=data['phone'],
+                        email=data['email'],
+                        on_probation=data['on_probation'],
+                        hire_date=datetime.strptime(data['hire_date'], '%Y-%m-%d')
+                    )
+                    db.session.add(employee)
+                db.session.commit()
+                print(f"✅ Создано {len(employees_data)} тестовых сотрудников")
+            else:
+                print(f"✅ В базе уже есть {Employee.query.count()} сотрудников")
+                
+        except Exception as e:
+            print(f"❌ Ошибка при инициализации базы данных: {e}")
+            db.session.rollback()
 
 if __name__ == '__main__':
     init_db()
