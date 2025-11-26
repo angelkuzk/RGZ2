@@ -4,7 +4,7 @@
 
 {% block content %}
 <div class="login-form">
-    <h2>Вход для кадровиков</h2>
+    <h2>Вход в систему</h2>
     <form method="POST">
         <div class="form-group">
             <label for="login">Логин:</label>
@@ -21,18 +21,22 @@
         <button type="submit" class="btn" style="width: 100%;">Войти в систему</button>
     </form>
     
-    <div style="margin-top: 2rem; padding: 1.5rem; background: #fff9e6; border-radius: 8px; border-left: 4px solid #ffd6a5;">
-        <h4 style="color: #8a6d3b; margin-bottom: 0.5rem;">Тестовые аккаунты:</h4>
-        <p style="margin: 0; color: #8a6d3b;">
-            <strong>Админ:</strong><br>
-            Логин: admin<br>
-            Пароль: admin123
-        </p>
-        <p style="margin: 1rem 0 0 0; color: #8a6d3b;">
-            <strong>Ангелина:</strong><br>
-            Логин: angelkuz<br>
-            Пароль: 02042004
-        </p>
+    <div style="margin-top: 2rem;">
+        <div style="padding: 1.5rem; background: #e8f6e8; border-radius: 8px; border-left: 4px solid #27ae60; margin-bottom: 1rem;">
+            <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">👑 Аккаунты кадровиков (полный доступ):</h4>
+            <p style="margin: 0; color: #2c3e50;">
+                <strong>Админ:</strong> login: <code>admin</code> | password: <code>admin123</code><br>
+                <strong>Ангелина:</strong> login: <code>angelkuz</code> | password: <code>02042004</code>
+            </p>
+        </div>
+        
+        <div style="padding: 1.5rem; background: #e8f4fd; border-radius: 8px; border-left: 4px solid #3498db;">
+            <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">👤 Аккаунты пользователей (только просмотр):</h4>
+            <p style="margin: 0; color: #2c3e50;">
+                <strong>Обычный пользователь:</strong> login: <code>user1</code> | password: <code>user123</code><br>
+                <strong>Тестовый пользователь:</strong> login: <code>test</code> | password: <code>test123</code>
+            </p>
+        </div>
     </div>
 </div>
 {% endblock %}

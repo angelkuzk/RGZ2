@@ -5,6 +5,21 @@
 {% block content %}
 <div class="employees-header">
     <h2 style="color: #2c3e50; margin-bottom: 1.5rem;">Список сотрудников</h2>
+{% if not is_authenticated %}
+<div class="access-info access-guest">
+    <p style="margin: 0; color: #2c3e50;">
+        <strong>🔒 Гостевой доступ</strong> - отображаются только ФИО и должности сотрудников. 
+        <a href="{{ url_for('login') }}" style="color: #3498db; font-weight: 600;">Войдите в систему</a> для просмотра полной информации.
+    </p>
+</div>
+{% elif not is_hr %}
+<div class="access-info access-user">
+    <p style="margin: 0; color: #2c3e50;">
+        <strong>👤 Права пользователя</strong> - доступен просмотр всех данных сотрудников. 
+        Для управления данными требуются права кадровика.
+    </p>
+</div>
+{% endif %}
     
     <!-- Фильтры и поиск -->
     <div class="filters-container">
@@ -27,11 +42,13 @@
                     <option value="">-- Выберите поле --</option>
                     <option value="full_name" {% if sort_field == 'full_name' %}selected{% endif %}>ФИО</option>
                     <option value="position" {% if sort_field == 'position' %}selected{% endif %}>Должность</option>
+                    {% if is_authenticated %}
                     <option value="gender" {% if sort_field == 'gender' %}selected{% endif %}>Пол</option>
                     <option value="phone" {% if sort_field == 'phone' %}selected{% endif %}>Телефон</option>
                     <option value="email" {% if sort_field == 'email' %}selected{% endif %}>Email</option>
                     <option value="hire_date" {% if sort_field == 'hire_date' %}selected{% endif %}>Дата устройства</option>
                     <option value="on_probation" {% if sort_field == 'on_probation' %}selected{% endif %}>Испытательный срок</option>
+                    {% endif %}
                 </select>
             </div>
 
@@ -50,7 +67,7 @@
     </div>
 </div>
 
-{% if is_authenticated %}
+{% if is_hr %}
 <div style="margin-bottom: 1.5rem;">
     <a href="{{ url_for('add_employee') }}" class="btn">➕ Добавить нового сотрудника</a>
 </div>
@@ -94,6 +111,7 @@
                         Должность {% if sort_field == 'position' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
                     </a>
                 </th>
+                {% if is_authenticated %}
                 <th>
                     <a href="?{% if search %}search={{ search }}&{% endif %}sort=gender&order={{ 'desc' if sort_field == 'gender' and sort_order == 'asc' else 'asc' }}">
                         Пол {% if sort_field == 'gender' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
@@ -119,8 +137,9 @@
                         Дата устройства {% if sort_field == 'hire_date' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
                     </a>
                 </th>
-                {% if is_authenticated %}
+                {% if is_hr %}
                 <th style="text-align: center;">Действия</th>
+                {% endif %}
                 {% endif %}
             </tr>
         </thead>
@@ -129,6 +148,7 @@
             <tr>
                 <td><strong>{{ employee.full_name }}</strong></td>
                 <td>{{ employee.position }}</td>
+                {% if is_authenticated %}
                 <td>{{ 'Мужской' if employee.gender == 'male' else 'Женский' }}</td>
                 <td>{{ employee.phone }}</td>
                 <td>{{ employee.email }}</td>
@@ -138,13 +158,14 @@
                     </span>
                 </td>
                 <td>{{ employee.hire_date.strftime('%d.%m.%Y') }}</td>
-                {% if is_authenticated %}
+                {% if is_hr %}
                 <td class="actions">
                     <a href="{{ url_for('edit_employee', employee_id=employee.id) }}" class="btn btn-edit">✏️ Редактировать</a>
                     <a href="{{ url_for('delete_employee', employee_id=employee.id) }}" 
                        class="btn btn-delete" 
                        onclick="return confirm('Вы уверены, что хотите удалить сотрудника {{ employee.full_name }}?')">🗑️ Удалить</a>
                 </td>
+                {% endif %}
                 {% endif %}
             </tr>
             {% endfor %}

@@ -9,12 +9,26 @@
     <a href="{{ url_for('employees') }}" class="btn">Посмотреть список сотрудников</a>
     
     {% if not session.user_id %}
-    <div style="margin-top: 2rem; padding: 1.5rem; background: #e8f4fd; border-radius: 10px; border-left: 4px solid #3498db;">
-        <p style="margin: 0; color: #2c3e50;">Для управления данными сотрудников требуется <a href="{{ url_for('login') }}" style="color: #3498db; font-weight: 600;">авторизация</a></p>
+    <div class="access-info access-guest">
+        <p style="margin: 0; color: #2c3e50;">
+            <strong>🔒 Гостевой доступ</strong><br>
+            Вы просматриваете систему как гость. Для управления данными сотрудников требуется 
+            <a href="{{ url_for('login') }}" style="color: #3498db; font-weight: 600;">авторизация с правами кадровика</a>
+        </p>
+    </div>
+    {% elif session.is_hr %}
+    <div class="access-info access-hr">
+        <p style="margin: 0; color: #2c3e50;">
+            <strong>👑 Права кадровика</strong><br>
+            Вы авторизованы как кадровик. Доступны все функции управления сотрудниками и пользователями.
+        </p>
     </div>
     {% else %}
-    <div style="margin-top: 2rem; padding: 1.5rem; background: #e8f6e8; border-radius: 10px; border-left: 4px solid #27ae60;">
-        <p style="margin: 0; color: #2c3e50;">Вы авторизованы как кадровик. Доступны все функции управления.</p>
+    <div class="access-info access-user">
+        <p style="margin: 0; color: #2c3e50;">
+            <strong>👤 Права пользователя</strong><br>
+            Вы авторизованы как пользователь. Доступен просмотр всех данных сотрудников, но управление ограничено.
+        </p>
     </div>
     {% endif %}
 </div>
@@ -32,7 +46,61 @@
     
     <div style="background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center;">
         <h3 style="color: #3498db; margin-bottom: 1rem;">📊 Управление</h3>
-        <p>Для кадровиков: добавление, редактирование и удаление записей сотрудников</p>
+        <p>
+            {% if session.is_hr %}
+            Полный доступ: добавление, редактирование и удаление записей сотрудников
+            {% else %}
+            Ограниченный доступ: только просмотр данных сотрудников
+            {% endif %}
+        </p>
     </div>
+</div>
+
+<!-- Таблица прав доступа -->
+<div style="margin-top: 3rem; background: white; padding: 2rem; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+    <h3 style="color: #2c3e50; margin-bottom: 1.5rem; text-align: center;">Уровни доступа в системе</h3>
+    
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr style="background: linear-gradient(135deg, #a8d8ea, #8cc4d8);">
+                <th style="padding: 1rem; text-align: left; color: #2c3e50;">Функция</th>
+                <th style="padding: 1rem; text-align: center; color: #2c3e50;">👑 Кадровик</th>
+                <th style="padding: 1rem; text-align: center; color: #2c3e50;">👤 Пользователь</th>
+                <th style="padding: 1rem; text-align: center; color: #2c3e50;">🔒 Гость</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="border-bottom: 1px solid #f0f0f0;">
+                <td style="padding: 1rem; font-weight: 600;">Просмотр ФИО и должностей</td>
+                <td style="padding: 1rem; text-align: center;">✅</td>
+                <td style="padding: 1rem; text-align: center;">✅</td>
+                <td style="padding: 1rem; text-align: center;">✅</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f0f0f0;">
+                <td style="padding: 1rem; font-weight: 600;">Просмотр полных данных</td>
+                <td style="padding: 1rem; text-align: center;">✅</td>
+                <td style="padding: 1rem; text-align: center;">✅</td>
+                <td style="padding: 1rem; text-align: center;">❌</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f0f0f0;">
+                <td style="padding: 1rem; font-weight: 600;">Добавление сотрудников</td>
+                <td style="padding: 1rem; text-align: center;">✅</td>
+                <td style="padding: 1rem; text-align: center;">❌</td>
+                <td style="padding: 1rem; text-align: center;">❌</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f0f0f0;">
+                <td style="padding: 1rem; font-weight: 600;">Редактирование сотрудников</td>
+                <td style="padding: 1rem; text-align: center;">✅</td>
+                <td style="padding: 1rem; text-align: center;">❌</td>
+                <td style="padding: 1rem; text-align: center;">❌</td>
+            </tr>
+            <tr>
+                <td style="padding: 1rem; font-weight: 600;">Управление пользователями</td>
+                <td style="padding: 1rem; text-align: center;">✅</td>
+                <td style="padding: 1rem; text-align: center;">❌</td>
+                <td style="padding: 1rem; text-align: center;">❌</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
 {% endblock %}

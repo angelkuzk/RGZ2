@@ -23,14 +23,23 @@
                 <a href="{{ url_for('index') }}">Главная</a>
                 <a href="{{ url_for('employees') }}">Сотрудники</a>
                 {% if session.user_id %}
-                    <a href="{{ url_for('add_employee') }}">Добавить сотрудника</a>
-                    <span>Вы вошли как {{ session.user_login }}</span>
+                    {% if session.is_hr %}
+                        <a href="{{ url_for('add_employee') }}">Добавить сотрудника</a>
+                        <a href="{{ url_for('register') }}">Регистрация пользователя</a>
+                    {% endif %}
+                    <span class="user-role">
+                        {% if session.is_hr %}
+                            🎯 Кадровик: {{ session.user_login }}
+                        {% else %}
+                            👤 Пользователь: {{ session.user_login }}
+                        {% endif %}
+                    </span>
                     <a href="{{ url_for('logout') }}">Выйти</a>
                     <form action="{{ url_for('delete_account') }}" method="POST">
                         <button type="submit" onclick="return confirm('Удалить аккаунт?')">Удалить аккаунт</button>
                     </form>
                 {% else %}
-                    <a href="{{ url_for('login') }}">Вход для кадровиков</a>
+                    <a href="{{ url_for('login') }}">Вход</a>
                 {% endif %}
             </nav>
         </div>

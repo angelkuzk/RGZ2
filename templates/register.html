@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Регистрация нового пользователя{% endblock %}
+
+{% block content %}
+<div class="login-form">
+    <h2>Регистрация нового пользователя</h2>
+    
+    <div style="margin-bottom: 2rem; padding: 1.5rem; background: #e8f4fd; border-radius: 8px; border-left: 4px solid #3498db;">
+        <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">👑 Информация о правах доступа:</h4>
+        <ul style="margin: 0; color: #2c3e50; padding-left: 1.5rem;">
+            <li><strong>Кадровик:</strong> полный доступ ко всем функциям системы</li>
+            <li><strong>Пользователь:</strong> только просмотр данных сотрудников</li>
+        </ul>
+    </div>
+    
+    <form method="POST">
+        <div class="form-group">
+            <label for="login">Логин:</label>
+            <input type="text" id="login" name="login" required 
+                   placeholder="Введите логин нового пользователя">
+        </div>
+        
+        <div class="form-group">
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" required
+                   placeholder="Введите пароль">
+        </div>
+        
+        <div class="form-group">
+            <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                <input type="checkbox" name="is_hr">
+                <span style="font-weight: 600;">Назначить права кадровика</span>
+            </label>
+        </div>
+        
+        <button type="submit" class="btn" style="width: 100%;">Зарегистрировать пользователя</button>
+        <a href="{{ url_for('employees') }}" class="btn btn-cancel" style="width: 100%; margin-top: 1rem;">Отмена</a>
+    </form>
+</div>
+{% endblock %}
