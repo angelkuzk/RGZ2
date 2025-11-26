@@ -67,7 +67,7 @@ def validate_employee_data(data):
     
     return errors
 
-# Фиксированный список сотрудников (остается без изменений)
+# Фиксированный список сотрудников
 def get_employees_data():
     return [
         # Руководство
@@ -224,6 +224,7 @@ def login():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    # Только авторизованные кадровики могут регистрировать новых пользователей
     if 'user_id' not in session or not session.get('is_hr'):
         flash('Доступ запрещен. Требуются права кадровика.', 'error')
         return redirect(url_for('login'))
@@ -231,6 +232,7 @@ def register():
     if request.method == 'POST':
         login = request.form.get('login')
         password = request.form.get('password')
+        # Все новые пользователи регистрируются как обычные пользователи (без прав кадровика)
         is_hr = False
         
         is_valid, message = validate_credentials(login, password)
@@ -238,6 +240,7 @@ def register():
             flash(message, 'error')
             return render_template('register.html')
         
+        # Проверяем, нет ли уже пользователя с таким логином
         existing_user = User.query.filter_by(login=login).first()
         if existing_user:
             flash('Пользователь с таким логином уже существует', 'error')

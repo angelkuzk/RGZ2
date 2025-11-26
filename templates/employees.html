@@ -131,12 +131,12 @@
                 </th>
                 <th>
                     <a href="?{% if search %}search={{ search }}&{% endif %}sort=on_probation&order={{ 'desc' if sort_field == 'on_probation' and sort_order == 'asc' else 'asc' }}">
-                        Испытательный срок {% if sort_field == 'on_probation' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
+                        Исп. срок {% if sort_field == 'on_probation' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
                     </a>
                 </th>
                 <th>
                     <a href="?{% if search %}search={{ search }}&{% endif %}sort=hire_date&order={{ 'desc' if sort_field == 'hire_date' and sort_order == 'asc' else 'asc' }}">
-                        Дата устройства {% if sort_field == 'hire_date' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
+                        Дата уст. {% if sort_field == 'hire_date' %}{{ '↑' if sort_order == 'asc' else '↓' }}{% endif %}
                     </a>
                 </th>
                 {% if is_hr %}
@@ -152,20 +152,21 @@
                 <td>{{ employee.position }}</td>
                 {% if is_authenticated %}
                 <td style="text-align: center;">{{ 'М' if employee.gender == 'male' else 'Ж' }}</td>
-                <td style="white-space: nowrap;">{{ employee.phone }}</td>
-                <td>{{ employee.email }}</td>
+                <td style="white-space: nowrap; font-size: 0.9rem;">{{ employee.phone }}</td>
+                <td style="font-size: 0.9rem;">{{ employee.email }}</td>
                 <td style="text-align: center;">
                     <span class="probation-badge {{ 'probation-yes' if employee.on_probation else 'probation-no' }}">
                         {{ 'Да' if employee.on_probation else 'Нет' }}
                     </span>
                 </td>
-                <td>{{ employee.hire_date.strftime('%d.%m.%Y') }}</td>
+                <td style="font-size: 0.9rem;">{{ employee.hire_date.strftime('%d.%m.%Y') }}</td>
                 {% if is_hr %}
                 <td class="actions">
-                    <a href="{{ url_for('edit_employee', employee_id=employee.id) }}" class="btn btn-edit">✏️ Редакт.</a>
+                    <a href="{{ url_for('edit_employee', employee_id=employee.id) }}" class="btn btn-edit" title="Редактировать">✏️</a>
                     <a href="{{ url_for('delete_employee', employee_id=employee.id) }}" 
                        class="btn btn-delete" 
-                       onclick="return confirm('Вы уверены, что хотите удалить сотрудника {{ employee.full_name }}?')">🗑️ Удалить</a>
+                       onclick="return confirm('Удалить {{ employee.full_name }}?')"
+                       title="Удалить">🗑️</a>
                 </td>
                 {% endif %}
                 {% endif %}
