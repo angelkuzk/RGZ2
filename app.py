@@ -267,13 +267,36 @@ def register():
     if request.method == 'POST':
         login = request.form.get('login')
         password = request.form.get('password')
-        # Все новые пользователи регистрируются как обычные пользователи (без прав кадровика)
-        is_hr = False
+        # Получаем значение чекбокса прав кадровика
+        is_hr = 'is_hr' in request.form
         
         is_valid, message = validate_credentials(login, password)
         if not is_valid:
             flash(message, 'error')
             return render_template('register.html')
+        
+        # Проверяем, нет ли уже пользователя с таким логином
+        existing_user = User.query.filter_by(login=login).first()
+        if existing_user:
+            flash('Пользователь с таким логином уже существует', 'error')
+            return render_template('register.html')
+        
+        try:
+            user = User(login=login, is_hr=is_hr)
+            user.set_password(password)
+            db.session.add(user)
+            db.session.commit()
+            
+            if is_hr:
+                flash(f'Пользователь {login} успешно зарегистрирован с правами кадровика', 'success')
+            else:
+                flash(f'Пользователь {login} успешно зарегистрирован как обычный пользователь', 'success')
+                
+            return redirect(url_for('employees'))
+        except Exception as e:
+            flash(f'Ошибка при регистрации: {str(e)}', 'error')
+    
+    return render_template('register.html')
         
         # Проверяем, нет ли уже пользователя с таким логином
         existing_user = User.query.filter_by(login=login).first()

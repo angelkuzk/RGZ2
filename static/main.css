@@ -105,6 +105,24 @@ header nav button:hover {
     transform: translateY(-2px);
 }
 
+/* Улучшенная кнопка удаления аккаунта */
+header nav .delete-account-btn {
+    background: none;
+    border: none;
+    color: #2c3e50;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: inherit;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+header nav .delete-account-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-2px);
+}
+
 /* Main content - на всю ширину */
 main {
     flex: 1;
@@ -233,6 +251,29 @@ main .container {
     box-shadow: 0 0 0 3px rgba(168, 216, 234, 0.2);
 }
 
+/* Стили для чекбокса в форме регистрации */
+.form-group input[type="checkbox"] {
+    width: auto;
+    margin-right: 0.5rem;
+    transform: scale(1.2);
+}
+
+.form-group .checkbox-label {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-weight: normal;
+    margin-bottom: 0.5rem;
+}
+
+.form-group .checkbox-help {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+    line-height: 1.4;
+}
+
 /* Tables - ПОЛНОСТЬЮ ПЕРЕДЕЛАНА */
 .employees-table-container {
     width: 100%;
@@ -240,6 +281,7 @@ main .container {
     margin-bottom: 2rem;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    position: relative;
 }
 
 .employees-table {
@@ -591,6 +633,18 @@ footer p {
     }
 }
 
+@media (max-width: 992px) {
+    .employees-table {
+        min-width: 1000px;
+    }
+    
+    .employees-table th,
+    .employees-table td {
+        padding: 0.8rem 0.5rem;
+        font-size: 0.9rem;
+    }
+}
+
 @media (max-width: 768px) {
     header .container {
         flex-direction: column;
@@ -613,16 +667,19 @@ footer p {
     header nav a, header nav span {
         display: block;
         text-align: center;
+        padding: 0.8rem 1rem;
     }
     
     .search-form {
         flex-direction: column;
         width: 100%;
+        gap: 0.8rem;
     }
     
     .search-form input {
         min-width: auto;
         width: 100%;
+        padding: 0.8rem;
     }
     
     .sort-filter-form {
@@ -638,100 +695,212 @@ footer p {
     .filter-group select {
         min-width: auto;
         width: 100%;
+        padding: 0.8rem;
     }
     
+    /* Улучшенная таблица для планшетов */
     .employees-table {
-        min-width: 1000px;
-        font-size: 0.9rem;
+        min-width: 900px;
+        font-size: 0.85rem;
     }
     
     .employees-table th,
     .employees-table td {
-        padding: 0.75rem 0.5rem;
+        padding: 0.7rem 0.4rem;
     }
     
     /* Уменьшаем минимальные ширины для мобильных */
     .employees-table th:nth-child(1),
     .employees-table td:nth-child(1) {
-        min-width: 150px;
+        min-width: 140px; /* ФИО */
     }
     
     .employees-table th:nth-child(2),
     .employees-table td:nth-child(2) {
-        min-width: 120px;
+        min-width: 110px; /* Должность */
+    }
+    
+    .employees-table th:nth-child(3),
+    .employees-table td:nth-child(3) {
+        min-width: 50px;  /* Пол */
     }
     
     .employees-table th:nth-child(4),
     .employees-table td:nth-child(4) {
-        min-width: 120px;
+        min-width: 110px; /* Телефон */
         font-size: 0.8rem;
     }
     
     .employees-table th:nth-child(5),
     .employees-table td:nth-child(5) {
-        min-width: 150px;
+        min-width: 140px; /* Email */
         font-size: 0.8rem;
+    }
+    
+    .employees-table th:nth-child(6),
+    .employees-table td:nth-child(6) {
+        min-width: 90px;  /* Исп. срок */
     }
     
     .employees-table th:nth-child(7),
     .employees-table td:nth-child(7) {
-        min-width: 100px;
+        min-width: 90px;  /* Дата уст. */
         font-size: 0.8rem;
     }
     
     .employees-table th:nth-child(8),
     .employees-table td:nth-child(8) {
-        min-width: 140px;
-        width: 140px;
+        min-width: 130px; /* Действия */
+        width: 130px;
     }
     
     .actions {
         gap: 0.3rem;
+        flex-direction: column;
     }
     
     .actions .btn {
-        padding: 0.4rem 0.6rem;
+        padding: 0.5rem 0.6rem;
         font-size: 0.75rem;
-        min-width: 55px;
+        min-width: 100%;
+        margin-bottom: 0.2rem;
     }
     
     .hero h2 {
-        font-size: 2rem;
+        font-size: 1.8rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
     }
     
     main .container {
         padding: 1rem;
         max-width: 100%;
-        border-radius: 0;
+        border-radius: 10px;
     }
     
     .login-form,
     .edit-form {
         margin: 1rem auto;
         padding: 1.5rem;
+        width: 95%;
+    }
+    
+    /* Улучшаем внешний вид флеш-сообщений */
+    .flash {
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    /* Улучшаем пагинацию */
+    .pagination {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .pagination .btn {
+        padding: 0.6rem 1rem;
+        width: 100%;
+        text-align: center;
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 576px) {
+    /* Еще более компактный вид для маленьких телефонов */
     .employees-table {
-        min-width: 900px;
+        min-width: 800px;
+        font-size: 0.8rem;
+    }
+    
+    .employees-table th,
+    .employees-table td {
+        padding: 0.6rem 0.3rem;
     }
     
     .employees-table th:nth-child(1),
     .employees-table td:nth-child(1) {
-        min-width: 130px;
+        min-width: 120px;
+    }
+    
+    .employees-table th:nth-child(2),
+    .employees-table td:nth-child(2) {
+        min-width: 100px;
+    }
+    
+    .employees-table th:nth-child(4),
+    .employees-table td:nth-child(4) {
+        min-width: 100px;
+        font-size: 0.75rem;
+    }
+    
+    .employees-table th:nth-child(5),
+    .employees-table td:nth-child(5) {
+        min-width: 120px;
+        font-size: 0.75rem;
+    }
+    
+    .employees-table th:nth-child(7),
+    .employees-table td:nth-child(7) {
+        min-width: 80px;
+        font-size: 0.75rem;
     }
     
     .employees-table th:nth-child(8),
     .employees-table td:nth-child(8) {
-        min-width: 130px;
-        width: 130px;
+        min-width: 120px;
+        width: 120px;
     }
     
-    .actions .btn {
-        padding: 0.3rem 0.5rem;
-        font-size: 0.7rem;
-        min-width: 50px;
+    .container {
+        padding: 0 10px;
+    }
+    
+    header h1 {
+        font-size: 1.5rem;
+    }
+    
+    .student-info {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    .user-role {
+        font-size: 0.85rem;
+        padding: 0.4rem 0.8rem;
+    }
+    
+    /* Улучшаем форму регистрации */
+    .form-group input,
+    .form-group select {
+        padding: 0.7rem 0.8rem;
+    }
+}
+
+/* Стили для подсказки о горизонтальной прокрутке на мобильных */
+.employees-table-container::after {
+    content: "← Прокрутите в сторону →";
+    display: none;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+@media (max-width: 768px) {
+    .employees-table-container::after {
+        display: block;
     }
 }
 
