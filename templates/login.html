@@ -5,6 +5,15 @@
 {% block content %}
 <div class="login-form">
     <h2>Вход в систему</h2>
+    
+    <div style="margin-bottom: 2rem; padding: 1.5rem; background: #e8f4fd; border-radius: 8px; border-left: 4px solid #3498db;">
+        <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">🔐 Информация о доступе:</h4>
+        <p style="margin: 0; color: #2c3e50;">
+            Для входа в систему используйте ваши учетные данные.<br>
+            Если у вас нет аккаунта, обратитесь к администратору.
+        </p>
+    </div>
+    
     <form method="POST">
         <div class="form-group">
             <label for="login">Логин:</label>
@@ -21,22 +30,10 @@
         <button type="submit" class="btn" style="width: 100%;">Войти в систему</button>
     </form>
     
-    <div style="margin-top: 2rem;">
-        <div style="padding: 1.5rem; background: #e8f6e8; border-radius: 8px; border-left: 4px solid #27ae60; margin-bottom: 1rem;">
-            <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">👑 Аккаунты кадровиков (полный доступ):</h4>
-            <p style="margin: 0; color: #2c3e50;">
-                <strong>Админ:</strong> login: <code>admin</code> | password: <code>admin123</code><br>
-                <strong>Ангелина:</strong> login: <code>angelkuz</code> | password: <code>02042004</code>
-            </p>
-        </div>
-        
-        <div style="padding: 1.5rem; background: #e8f4fd; border-radius: 8px; border-left: 4px solid #3498db;">
-            <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">👤 Аккаунты пользователей (только просмотр):</h4>
-            <p style="margin: 0; color: #2c3e50;">
-                <strong>Обычный пользователь:</strong> login: <code>user1</code> | password: <code>user123</code><br>
-                <strong>Тестовый пользователь:</strong> login: <code>test</code> | password: <code>test123</code>
-            </p>
-        </div>
+    <div style="margin-top: 2rem; text-align: center;">
+        <p style="color: #7f8c8d; font-size: 0.9rem;">
+            Система управления персоналом | Отдел кадров
+        </p>
     </div>
 </div>
 {% endblock %}

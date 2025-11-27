@@ -306,12 +306,25 @@ def logout():
     return redirect(url_for('index'))
 
 @app.route('/delete_account', methods=['POST'])
+@app.route('/delete_account', methods=['POST'])
 def delete_account():
     if 'user_id' not in session:
         return redirect(url_for('login'))
     
     user = User.query.get(session['user_id'])
     if user:
+        # Защита администратора от удаления
+        if user.login == 'admin':
+            flash('Аккаунт администратора нельзя удалить', 'error')
+            return redirect(url_for('index'))
+        
+        # Проверяем, не пытается ли удалить себя последний кадровик
+        if user.is_hr:
+            hr_count = User.query.filter_by(is_hr=True).count()
+            if hr_count == 1:
+                flash('Невозможно удалить последнего кадровика в системе', 'error')
+                return redirect(url_for('index'))
+        
         db.session.delete(user)
         db.session.commit()
         session.clear()
@@ -478,13 +491,21 @@ def init_db():
             db.create_all()
             print("✅ Таблицы базы данных созданы")
             
-            # Проверяем, есть ли уже пользователи
-            if User.query.count() == 0:
+            # Создаем или обновляем администратора (нельзя удалить через интерфейс)
+            admin_user = User.query.filter_by(login='admin').first()
+            if not admin_user:
+                admin_user = User(login='admin', is_hr=True)
+                admin_user.set_password('admin123')
+                db.session.add(admin_user)
+                print("✅ Создан администратор (логин: admin, пароль: admin123)")
+            else:
+                # Обновляем права на случай, если админ был изменен
+                admin_user.is_hr = True
+                print("✅ Администратор уже существует, права обновлены")
+            
+            # Проверяем, есть ли уже другие пользователи кроме админа
+            if User.query.filter(User.login != 'admin').count() == 0:
                 # Создаем тестовых пользователей (кадровиков)
-                admin = User(login='admin', is_hr=True)
-                admin.set_password('admin123')
-                db.session.add(admin)
-                
                 angelina = User(login='angelkuz', is_hr=True)
                 angelina.set_password('02042004')
                 db.session.add(angelina)
@@ -499,13 +520,10 @@ def init_db():
                 db.session.add(test_user)
                 
                 db.session.commit()
-                print("✅ Созданы пользователи:")
-                print("   👑 Кадровики:")
-                print("      - login: admin, password: admin123")
-                print("      - login: angelkuz, password: 02042004")
-                print("   👤 Пользователи:")
-                print("      - login: user1, password: user123")
-                print("      - login: test, password: test123")
+                print("✅ Созданы тестовые пользователи")
+            else:
+                db.session.commit()
+                print("✅ Пользователи уже существуют в базе")
             
             # Создаем тестовых сотрудников из фиксированного списка
             if Employee.query.count() == 0:

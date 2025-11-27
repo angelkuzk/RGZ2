@@ -29,7 +29,11 @@
                     {% endif %}
                     <span class="user-role">
                         {% if session.is_hr %}
-                            🎯 Кадровик: {{ session.user_login }}
+                            {% if session.user_login == 'admin' %}
+                                👑 Администратор
+                            {% else %}
+                                🎯 Кадровик: {{ session.user_login }}
+                            {% endif %}
                         {% else %}
                             👤 Пользователь: {{ session.user_login }}
                         {% endif %}

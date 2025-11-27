@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block title %}Восстановление доступа{% endblock %}
+
+{% block content %}
+<div class="login-form">
+    <h2>🔐 Восстановление доступа</h2>
+    
+    <div style="margin-bottom: 2rem; padding: 1.5rem; background: #fff9e6; border-radius: 8px; border-left: 4px solid #f39c12;">
+        <h4 style="color: #2c3e50; margin-bottom: 0.5rem;">⚠️ Важная информация:</h4>
+        <p style="margin: 0; color: #2c3e50;">
+            Если в системе не осталось кадровиков с правами доступа,<br>
+            используйте учетные данные администратора для восстановления:
+        </p>
+        <div style="margin-top: 1rem; padding: 1rem; background: #f8f9fa; border-radius: 5px;">
+            <strong>Логин:</strong> admin<br>
+            <strong>Пароль:</strong> admin123
+        </div>
+        <p style="margin: 1rem 0 0 0; color: #e74c3c; font-size: 0.9rem;">
+            ⚠️ Эти данные должны храниться в безопасном месте и использоваться только в аварийных ситуациях.
+        </p>
+    </div>
+    
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{{ url_for('login') }}" class="btn">Перейти к входу в систему</a>
+    </div>
+</div>
+{% endblock %}
